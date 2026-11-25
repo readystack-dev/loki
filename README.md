@@ -5,7 +5,35 @@ The offline build kit for the Docker image `readystack/loki:v3.7.10-CE-ubuntu24.
 - Release: [v3.7.10-CE-ubuntu24.04-r2](https://github.com/readystack-dev/loki/releases/tag/v3.7.10-CE-ubuntu24.04-r2)
 - Image: [`docker.io/readystack/loki:v3.7.10-CE-ubuntu24.04-r2`](https://hub.docker.com/r/readystack/loki/tags), manifest digest `sha256:610a15ec41ac200474f32fef8a43ca3ca3444f989174cd3bc969401138297523`
 - Product page: https://readystack.dev/products/loki
+- Source and build recipe: https://readystack.dev/products/loki/recipe
+- Build trail: https://readystack.dev/products/loki/trail/v3.7.10-CE-ubuntu24.04-r2
 - Defects: this repository's Issues (defects recorded from 25 November 2026 on) and https://readystack.dev/defects.html?product=loki
+
+## The image
+
+Single container, single static Go binary running in single-binary monolithic mode (-target=all, all components in one process), foreground process. Log aggregation with the tsdb index + chunk object-store BOTH on the local filesystem under /loki; NO relational/SQL database, NO external object store, NO sidecar. The image IS the complete running instance.
+
+## Who uses Loki and why
+
+Operations and platform teams who collect logs from many services, especially on Kubernetes, and read them alongside metrics in Grafana.
+
+Loki is a log aggregation system that indexes only a set of labels for each log stream instead of the full text, which keeps it simpler to operate and cheaper to run.
+
+A typical use: A team runs many services on Kubernetes and needs their logs in one place. An agent ships each pod's logs to Loki with the pod's labels; when an alert fires, an engineer filters by those labels in Grafana and reads the matching logs next to the metrics.
+
+From the upstream project's own description: https://github.com/grafana/loki, https://grafana.com/docs/loki/latest/.
+
+## This release
+
+- Docker Scout policy grade at release: **A** (94%), graded 2026-11-22 with `docker scout policy` (CLI 1.26.0, docker-default configuration).
+  - Docker Scout counts 10 packages with copyleft licences (GPL, LGPL, MPL), all of them operating-system packages (it counts only packages whose licence it can read; the SBOM lists every component).
+- Signed with ReadyStack's release key (fingerprint `04daa92344a52dbc`): https://readystack.dev/keys/cosign.pub.
+- Runs as a non-root user (`loki`).
+- Attestations on the image: an SPDX SBOM and SLSA provenance v1.
+- Rebuilt from this kit with network egress blocked on 2026-11-22; the rebuilt image digest is the published one.
+- Base: Ubuntu 24.04.
+
+The current grade, measured again every day, is on https://readystack.dev/products/loki.
 
 Loki is distributed under its upstream licence (AGPL-3.0-only); the kit contains upstream's source under that licence, and each vendored component under its own.
 
@@ -39,3 +67,5 @@ The build trail (`ReadyStack-loki-v3.7.10-CE-ubuntu24.04-r2.trail.json`, signed 
 ## This repository
 
 `recipe/` holds the kit's recipe files (Dockerfiles, build scripts, pins) as published at https://readystack.dev/products/loki/recipe. The complete kit is the release download. Each release is a tag here.
+
+— ReadyStack · https://readystack.dev
