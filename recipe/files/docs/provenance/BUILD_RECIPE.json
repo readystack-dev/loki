@@ -1,0 +1,66 @@
+{
+  "schema": "kitforge.build_recipe.v1",
+  "slug": "loki",
+  "image": "readystack/loki:v3.7.10-CE-ubuntu24.04-r2",
+  "build_method": "source-rebuild-go",
+  "source": {
+    "repo": "https://github.com/grafana/loki",
+    "ref": "v3.7.10",
+    "builder_image": "golang:1.26.11-bookworm",
+    "go_module_root": "github.com/grafana/loki/v3",
+    "go_version_required": "1.26.4",
+    "_version_note": "v3.7.3 is the LATEST Loki GA (queue-latest-version policy, owner 2026-06-25). go.mod directive is `go 1.26.4`; golang:1.26-bookworm ships go1.26.4 EXACTLY (== go.mod), so GOTOOLCHAIN=local compiles with ZERO toolchain download \u2014 matches the --network=none offline promise. There is NO go.work in the tree (confirmed `ls go.work*` => none) so GOWORK=off is NOT needed. Offline drive: `go mod vendor` then build `-mod=vendor`. RISK: if Docker Hub later reverts golang:1.26-bookworm to a patch < 1.26.4, GOTOOLCHAIN=local would FAIL \u2014 pin GOTOOLCHAIN=go1.26.4 (or the builder digest) in the offline kit. LIVE-VERIFIED on <redacted: internal host>: clean `go build -tags netgo -trimpath`, `loki, version 3.7.3 (branch: HEAD, revision: 82cdcdc0)`, go version go1.26.4, platform linux/amd64, tags netgo, 147M (153,989,282 bytes) static ELF, exit 0.",
+    "build_env": {
+      "CGO_ENABLED": "0",
+      "GOTOOLCHAIN": "local",
+      "GOFLAGS": "-mod=mod"
+    },
+    "vendor_build": null,
+    "_no_vendor_build_note": "Loki is API-only with ZERO go:embed of frontend assets \u2014 a plain `go build ./cmd/loki` yields a complete server. NO Node/npm/asset-gen step (unlike prometheus/grafana/syncthing). source.vendor_build is intentionally OMITTED (null).",
+    "source_date_epoch": 1795161097,
+    "source_date_epoch_provenance": "the time release v3.7.10-CE-ubuntu24.04-r2 was cut (2026-11-20T07:51:37Z), by scripts/retarget.py --rev-bump: ReadyStack dates an image by when its release was packaged (owner 2026-11-10), recorded here once and used by every rebuild of the release; it builds upstream commit c792f58577a4, dated 2026-11-13T00:10:30Z (source.commit_epoch).",
+    "commit": "c792f58577a46c64b0a8e808d7c643ed0e8c5e83",
+    "source_date_epoch_basis": "release-cut",
+    "commit_epoch": 1794528630
+  },
+  "binaries_from_source": [
+    {
+      "name": "loki",
+      "main_pkg": "./cmd/loki",
+      "cgo_enabled": 0,
+      "build_tags": [
+        "netgo"
+      ],
+      "build_flags": [
+        "-trimpath"
+      ],
+      "ldflags": "-s -w -X github.com/grafana/loki/v3/pkg/util/build.Version=@VERSION_BARE@ -X github.com/grafana/loki/v3/pkg/util/build.Branch=HEAD -X github.com/grafana/loki/v3/pkg/util/build.Revision=@COMMIT:8@",
+      "out_path": "/usr/bin/loki",
+      "verify_subcmd": "-version",
+      "_note": "Single static binary; main_pkg ./cmd/loki (cmd/loki/main.go). Default -target=all IS the single-binary monolithic mode (all components in one process) \u2014 it is the upstream default, passed explicitly in the entrypoint for clarity. Version package github.com/grafana/loki/v3/pkg/util/build (vars Version/Branch/Revision); its init() copies them into github.com/prometheus/common/version which `loki -version` prints. Stamp the BARE version `3.7.3` (no leading v). Mirrors upstream Makefile `make loki`. verify_subcmd is `-version` (single dash, Go flag), NOT --version."
+    }
+  ],
+  "runtime_packages": [
+    "base-files",
+    "base-passwd",
+    "ca-certificates",
+    "coreutils",
+    "dash",
+    "libacl1",
+    "libc6",
+    "libpcre2-8-0",
+    "libselinux1",
+    "libssl3t64",
+    "openssl",
+    "tar",
+    "tzdata"
+  ],
+  "runtime_base": {
+    "kind": "chisel",
+    "shell": true,
+    "tools": [
+      "tar"
+    ],
+    "packages": "vendored/chisel/packages.tsv"
+  }
+}

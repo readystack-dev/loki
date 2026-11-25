@@ -1,0 +1,9 @@
+{
+  "schema": "kitforge.source_tree_hash.v1",
+  "slug": "loki",
+  "repo": "https://github.com/grafana/loki",
+  "ref": "v3.7.10",
+  "commit": "c792f58577a46c64b0a8e808d7c643ed0e8c5e83",
+  "tree_listing_sha256": "9d5ae892da846aa56675f55cfa9a39126c62a3c8d0e70539fff87f79434d7592",
+  "file_count": 23183
+}

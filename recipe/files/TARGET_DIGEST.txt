@@ -1,0 +1,6 @@
+image_manifest_digest=sha256:610a15ec41ac200474f32fef8a43ca3ca3444f989174cd3bc969401138297523
+config_digest=sha256:ef8a14f99308130089a3da1656d274046db67369e9bf8ad373dee65c39995a50
+tag=readystack/loki:v3.7.10-CE-ubuntu24.04-r2
+probe_port=3100
+probe_path=/ready
+probe_timeout=180
